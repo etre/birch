@@ -1,0 +1,1 @@
+Cache directory. Must have read/write file access
