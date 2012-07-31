@@ -1,0 +1,1 @@
+Content directory. Represents actual site paths

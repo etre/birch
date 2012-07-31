@@ -1,0 +1,1 @@
+Web server root. Good place to store images / css / etc in subdirectories
