@@ -117,7 +117,7 @@ class CMS
 		}
 		catch(Exception $e)
 		{
-			$code = ($e->getCode()) ? $e->getCode() : (is_numeric($e->getMessage())) ? (int) $e->getMessage() : HTTP_500;
+			$code = ($e->getCode()) ? $e->getCode() : ((is_numeric($e->getMessage())) ? (int) $e->getMessage() : HTTP_500);
 			if(isset($_SERVER['SERVER_PROTOCOL']) && $_SERVER['SERVER_PROTOCOL']) header($_SERVER['SERVER_PROTOCOL'].' '.$code);
 
 			if($code === HTTP_500) Log::errorHandler($e); // Логгирование ошибок
