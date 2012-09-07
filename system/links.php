@@ -50,8 +50,9 @@ class Links
 				$d = substr($d, 0, -$lock);
 			}
 			else continue;
+			$title = (filesize($p) > 0) ? file_get_contents($p) : null;
 			if(isset(self::$links[$d])) throw new Exception(__METHOD__.': duplicate link file "'.$d.'" find in '.(self::$dir.self::$links[$d]).' and '.$dir);
-			self::$links[$d] = array($type,'/'.substr($dir,$remove));
+			self::$links[$d] = array($type,'/'.substr($dir,$remove),$title);
 		}
 	}
 
@@ -97,7 +98,7 @@ class Links
 	}
 
 	// Выводим все локи
-	public static function locks()
+	public static function locks($titles = false)
 	{
 		static $cache;
 		if($cache !== null) return $cache;
@@ -105,7 +106,7 @@ class Links
 		if(!self::load()) { self::scan(); self::save(); }
 
 		$cache = array();
-		foreach(self::$links as $k=>$v) if($v[0] === self::LOCK) $cache[$k] = $v[1];
+		foreach(self::$links as $k=>$v) if($v[0] === self::LOCK) $cache[$k] = ($titles) ? array($v[1],$v[2]): $v[1];
 		return $cache;
 	}
 
