@@ -138,6 +138,6 @@ class Links
 	public static function passed($name = false)
 	{
 		$tmp = self::getLinksFromCMSQueue();
-		return isset($tmp[$name]);
+		return ($name) ? isset($tmp[$name]) : $tmp;
 	}
 }
