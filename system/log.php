@@ -22,7 +22,7 @@ class Log
 
 	public static function errorHandler($code,$message = false,$file = false,$line = false)
 	{
-		if(!self::$enabled) return;
+		if(!self::$enabled) return false;
 
 		if(is_object($code))
 		{
@@ -33,7 +33,7 @@ class Log
 		}
 		else
 		{
-			if (!(error_reporting() & $code)) return;
+			if (!(error_reporting() & $code)) return false;
 
 			switch($code)
 			{

@@ -274,6 +274,8 @@ class CMS
 		$skip = false;
 		self::$queue = &$queue; // Для runtime доступа к очереди
 
+		$result = null;
+
 		foreach($queue as $v)
 		{
 			if(isset(self::$heap->{$v[0]})) continue;
