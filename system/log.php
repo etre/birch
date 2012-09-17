@@ -33,7 +33,7 @@ class Log
 		}
 		else
 		{
-			if (!(error_reporting() & $code)) return false;
+			if (!(error_reporting() & $code)) return null;
 
 			switch($code)
 			{
