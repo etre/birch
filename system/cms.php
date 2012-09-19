@@ -274,11 +274,11 @@ class CMS
 		$skip = false;
 		self::$queue = &$queue; // Для runtime доступа к очереди
 
-		$result = null;
+		$result = $level = null;
 
 		foreach($queue as $v)
 		{
-			if(isset(self::$heap->{$v[0]})) continue;
+			if(isset(self::$heap->{$v[0]}) && $level != $v[5]) continue; // В пределах текущего уровня перезаписываем имя
 
 			// Пропускаем уровни в случае если special возвращает не false.
 			if($skip !== false) if($v[5] > $skip) continue; else $skip = false; // v[5] - level значение
@@ -297,6 +297,8 @@ class CMS
 			}
 
 			unset($obj);
+
+			if($level != $v[5]) $level = $v[5];
 		}
 
 		if($result === null) throw new Exception(HTTP_404);
