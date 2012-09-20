@@ -279,7 +279,7 @@ class CMS
 
 		foreach($queue as $v)
 		{
-			if(isset(self::$heap->{$v[0]}) && !isset($names[$v[5]][$v[0]])) continue; // В пределах текущего уровня перезаписываем имя
+			if(isset(self::$heap->{$v[0]}) && !isset($names[$v[5]][$v[0]]) && $v[1] != Links::LINK && $v[1] != Links::LOCK) continue; // В пределах текущего уровня перезаписываем имя
 
 			// Пропускаем уровни в случае если special возвращает не false.
 			if($skip !== false) if($v[5] > $skip) continue; else $skip = false; // v[5] - level значение
