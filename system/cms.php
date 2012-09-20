@@ -12,78 +12,78 @@ define('CMS_FLAG_FINAL','f');		// финальный флаг
 // Module execution class
 class CMSMod
 {
-    public $name;		// имя без учета расширения и флагов (для heap)
-    public $path;		// путь + имя файла внутри директории контента (контент рут)
-    public $method;		// метод исполнения
-    public $sort;		// приоритет (0-9) или F - 100 или S - 111
-    public $entry;		// уровень входа
-    public $current;	// имя текущей директории
-    public $location;	// массив пути 0=>...
-    public $level;		// уровень модуля
-    public $local;		// признак локального запуска
+	public $name;		// имя без учета расширения и флагов (для heap)
+	public $path;		// путь + имя файла внутри директории контента (контент рут)
+	public $method;		// метод исполнения
+	public $sort;		// приоритет (0-9) или F - 100 или S - 111
+	public $entry;		// уровень входа
+	public $current;	// имя текущей директории
+	public $location;	// массив пути 0=>...
+	public $level;		// уровень модуля
+	public $local;		// признак локального запуска
 
-    public function __construct($name,$method,$sort,$path,$current,$level,$entry,$location)
-    {
-        if(!method_exists($this, $method)) throw new Exception(HTTP_500);
-        list($this->name, $this->method, $this->sort, $this->path, $this->current, $this->level, $this->entry, $this->location) = func_get_args();
-        $this->local = ($this->entry == $this->level);
-    }
+	public function __construct($name,$method,$sort,$path,$current,$level,$entry,$location)
+	{
+		if(!method_exists($this, $method)) throw new Exception(HTTP_500);
+		list($this->name, $this->method, $this->sort, $this->path, $this->current, $this->level, $this->entry, $this->location) = func_get_args();
+		$this->local = ($this->entry == $this->level);
+	}
 
-    // Инстанциирование класса с произвольными аргументами. Аналог call_user_method но для класса
-    public static function __factory(array $args = array())
-    {
-        static $ref;
-        if($ref === null) $ref = new ReflectionClass(__CLASS__);
-        return $ref->newInstanceArgs($args);
-    }
+	// Инстанциирование класса с произвольными аргументами. Аналог call_user_method но для класса
+	public static function __factory(array $args = array())
+	{
+		static $ref;
+		if($ref === null) $ref = new ReflectionClass(__CLASS__);
+		return $ref->newInstanceArgs($args);
+	}
 
-    public function __invoke() { return call_user_func(array($this,$this->method)); }
+	public function __invoke() { return call_user_func(array($this,$this->method)); }
 
-    public static function __methods()
-    {
-        $tmp = array();
-        foreach(get_class_methods(__CLASS__) as $v) if($v{0} != '_') $tmp[$v] = $v;
-        return $tmp;
-    }
+	public static function __methods()
+	{
+		$tmp = array();
+		foreach(get_class_methods(__CLASS__) as $v) if($v{0} != '_') $tmp[$v] = $v;
+		return $tmp;
+	}
 
-    // Методы исполнения для указанных расширений
+	// Методы исполнения для указанных расширений
 
-    public static $priority = array('tpl'=>1,'phtml'=>1); // Приоритет по умолчанию для типов данных. Для правильной сборки шаблонным файлам присваивается 1 по умолчанию
+	public static $priority = array('tpl'=>1,'phtml'=>1); // Приоритет по умолчанию для типов данных. Для правильной сборки шаблонным файлам присваивается 1 по умолчанию
 
-    public function php() { return include($this->path); }
+	public function php() { return include($this->path); }
 
-    public function html() { return file_get_contents($this->path); }
+	public function html() { return file_get_contents($this->path); }
 
-    public function js() { return '<script type="text/javascript">'.file_get_contents($this->path).'</script>'; }
+	public function js() { return '<script type="text/javascript">'.file_get_contents($this->path).'</script>'; }
 
-    public function phtml()
-    {
-	    ob_start();
-        extract((array) CMS::Heap());
-        if(CMS_SKIP_MODULE === include($this->path))
-        {
-	        ob_end_clean();
-	        return CMS_SKIP_MODULE;
-        }
-	    return ob_get_clean();
-    }
+	public function phtml()
+	{
+		ob_start();
+		extract((array) CMS::Heap());
+		if(CMS_SKIP_MODULE === include($this->path))
+		{
+			ob_end_clean();
+			return CMS_SKIP_MODULE;
+		}
+		return ob_get_clean();
+	}
 
 	// Смарти шаблоны
-    public function tpl()
-    {
-	    static $obj;
-	    if($obj === null)
-	    {
-		    $obj  = new Smarty();
-		    $obj->setCompileDir(PATH_CACHE);
+	public function tpl()
+	{
+		static $obj;
+		if($obj === null)
+		{
+			$obj  = new Smarty();
+			$obj->setCompileDir(PATH_CACHE);
 
-		    // Отключаем smarty автолоадер
-		    foreach(spl_autoload_functions() as $v) if($v != array('Autoloader','check')) spl_autoload_unregister($v);
-	    }
+			// Отключаем smarty автолоадер
+			foreach(spl_autoload_functions() as $v) if($v != array('Autoloader','check')) spl_autoload_unregister($v);
+		}
 
-	    $obj->assign((array) CMS::Heap());
-	    return $obj->fetch($this->path);
-    }
+		$obj->assign((array) CMS::Heap());
+		return $obj->fetch($this->path);
+	}
 
 	// Links access & navigation modules
 	public function link() { return CMS_SKIP_MODULE; }
@@ -94,16 +94,16 @@ class CMSMod
 class CMS
 {
 	protected static $heap;
-    protected static $url;
+	protected static $url;
 	protected static $queue;
 
 	public static function Queue() { return self::$queue; }
 	public static function &Heap() { return self::$heap; }
-    public static function Url() { return self::$url; }
+	public static function Url() { return self::$url; }
 
 	public static function Start($content,$url)
 	{
-        self::$heap = new stdClass();
+		self::$heap = new stdClass();
 		$content = rtrim($content,'/');
 		$url = rtrim($url,'/');
 
@@ -274,11 +274,12 @@ class CMS
 		$skip = false;
 		self::$queue = &$queue; // Для runtime доступа к очереди
 
-		$result = $level = null;
+		$result = null;
+		$names = array();
 
 		foreach($queue as $v)
 		{
-			if(isset(self::$heap->{$v[0]}) && $level != $v[5]) continue; // В пределах текущего уровня перезаписываем имя
+			if(isset(self::$heap->{$v[0]}) && !isset($names[$v[5]][$v[0]])) continue; // В пределах текущего уровня перезаписываем имя
 
 			// Пропускаем уровни в случае если special возвращает не false.
 			if($skip !== false) if($v[5] > $skip) continue; else $skip = false; // v[5] - level значение
@@ -293,12 +294,11 @@ class CMS
 
 				// Пишем если есть что записывать
 				self::$heap->{$v[0]} = $result; // v[0] - name
+				$names[$v[5]][$v[0]] = true; // Добавляем имя в уровень для контроля дубликатов.
 				$result = null;
 			}
 
 			unset($obj);
-
-			if($level != $v[5]) $level = $v[5];
 		}
 
 		if($result === null) throw new Exception(HTTP_404);
