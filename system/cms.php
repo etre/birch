@@ -48,7 +48,7 @@ class CMSMod
 
 	// Методы исполнения для указанных расширений
 
-	public static $priority = array('tpl'=>1,'phtml'=>1); // Приоритет по умолчанию для типов данных. Для правильной сборки шаблонным файлам присваивается 1 по умолчанию
+	public static $priority = array('tpl'=>1,'phtml'=>1,'js'=>1); // Приоритет по умолчанию для типов данных. Для правильной сборки шаблонным файлам присваивается 1 по умолчанию
 
 	public function php() { return include($this->path); }
 
@@ -141,6 +141,8 @@ class CMS
 			if($file{0} == '.') continue;
 			$tmp[$file] = ! is_dir($dir.'/'.$file); // true если НЕ директория
 		}
+
+		asort($tmp);
 
 		closedir($handle);
 		return $tmp;
