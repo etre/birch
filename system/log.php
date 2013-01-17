@@ -20,7 +20,7 @@ class Log
 	public static function disable() { self::$enabled = false; }
 	public static function enabled() { self::$enabled = true; }
 
-	public static function errorHandler($code,$message = false,$file = false,$line = false,$backtrace = false)
+	public static function errorHandler($code,$message = false,$file = false,$line = false,$vars = null, $backtrace = false)
 	{
 		if(!self::$enabled) return true;
 
@@ -98,7 +98,7 @@ class Log
 
 	public static function shutdownHandler()
 	{
-		if ($error = error_get_last() and $error['type'] & (E_ERROR|E_PARSE|E_COMPILE_ERROR|E_CORE_ERROR)) self::errorHandler($error['type'], $error['message'], $error['file'], $error['line'], debug_backtrace());
+		if ($error = error_get_last() and $error['type'] & (E_ERROR|E_PARSE|E_COMPILE_ERROR|E_CORE_ERROR)) self::errorHandler($error['type'], $error['message'], $error['file'], $error['line'], null, debug_backtrace());
 	}
 
 	public static function debug($message)
